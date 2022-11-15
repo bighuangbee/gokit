@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"git.hiscene.net/hifoundry/go-kit/log"
+	"github.com/bighuangbee/gokit/log"
 	"github.com/go-redis/redis/extra/redisotel/v8"
 	"github.com/go-redis/redis/v8"
 )

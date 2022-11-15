@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"git.hiscene.net/hifoundry/go-kit/constance/hiCommon"
-	"git.hiscene.net/hifoundry/go-kit/log"
+	"github.com/bighuangbee/gokit/constance"
+	"github.com/bighuangbee/gokit/log"
 	klog "github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"go.uber.org/zap"
@@ -74,7 +74,7 @@ func (l *ZapLogger) WithCtx(ctx context.Context) log.Logger {
 	v := tracing.TraceID()
 	tid := v(ctx).(string)
 	if tid != "" {
-		r.SugaredLogger = l.SugaredLogger.With(zap.String(hiCommon.TraceID, v(ctx).(string)))
+		r.SugaredLogger = l.SugaredLogger.With(zap.String(constance.TraceID, v(ctx).(string)))
 	} else {
 		r.SugaredLogger = l.SugaredLogger
 	}

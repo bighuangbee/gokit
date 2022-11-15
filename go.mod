@@ -3,7 +3,6 @@ module github.com/bighuangbee/gokit
 go 1.19
 
 require (
-	git.hiscene.net/hifoundry/go-kit v0.0.0-20221024065027-898be6c900d6
 	github.com/BurntSushi/toml v0.3.1
 	github.com/fatih/structs v1.1.0
 	github.com/go-kratos/kratos/v2 v2.5.3

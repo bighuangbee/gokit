@@ -3,9 +3,8 @@ package kitRedis
 import (
 	"context"
 	"testing"
-
-	"git.hiscene.net/hifoundry/go-kit/constance/hiCommon"
-	"git.hiscene.net/hifoundry/go-kit/log/hiZap"
+	"github.com/bighuangbee/gokit/constance"
+	"github.com/bighuangbee/gokit/log/kitZap"
 	"go.uber.org/zap/zapcore"
 )
 
@@ -22,7 +21,7 @@ func Test_New(t *testing.T) {
 func Test_Redis(t *testing.T) {
 	client, err := New(&Options{
 		Addr: "192.168.23.68:30096",
-		Logger: hiZap.New(&hiZap.Options{
+		Logger: kitZap.New(&kitZap.Options{
 			Level: zapcore.DebugLevel,
 			Skip:  4,
 		}),
@@ -31,7 +30,7 @@ func Test_Redis(t *testing.T) {
 		t.Log(err)
 		t.Fail()
 	}
-	ctx := context.WithValue(context.Background(), hiCommon.TIDKey, "ttttt")
+	ctx := context.WithValue(context.Background(), constance.TraceID, "ttttt")
 	t.Run("Normal", func(t *testing.T) {
 		_, err := client.Get(ctx, "gokit_test").Result()
 		if err != nil {
