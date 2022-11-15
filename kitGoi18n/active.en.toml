@@ -1,0 +1,3 @@
+HelloWorld = "hello world"
+PersonInfo = "name:{{.p1}},age:{{.p2}}"
+PersonInfoErr = "name:{{.p1}},age:<no value>"
