@@ -135,48 +135,6 @@ func ErrorRecordIsExists(format string, args ...interface{}) *errors.Error {
 	return errors.New(500, ErrorReason_RecordIsExists.String(), fmt.Sprintf(format, args...))
 }
 
-// RedisExist 错误
-func IsRedisExistError(err error) bool {
-	if err == nil {
-		return false
-	}
-	e := errors.FromError(err)
-	return e.Reason == ErrorReason_RedisExistError.String() && e.Code == 500
-}
-
-// RedisExist 错误
-func ErrorRedisExistError(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_RedisExistError.String(), fmt.Sprintf(format, args...))
-}
-
-// RedisGet 错误
-func IsRedisGetError(err error) bool {
-	if err == nil {
-		return false
-	}
-	e := errors.FromError(err)
-	return e.Reason == ErrorReason_RedisGetError.String() && e.Code == 500
-}
-
-// RedisGet 错误
-func ErrorRedisGetError(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_RedisGetError.String(), fmt.Sprintf(format, args...))
-}
-
-// 无访问权限
-func IsNoAccess(err error) bool {
-	if err == nil {
-		return false
-	}
-	e := errors.FromError(err)
-	return e.Reason == ErrorReason_NoAccess.String() && e.Code == 500
-}
-
-// 无访问权限
-func ErrorNoAccess(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_NoAccess.String(), fmt.Sprintf(format, args...))
-}
-
 // http调用失败
 func IsHttpError(err error) bool {
 	if err == nil {
@@ -189,32 +147,4 @@ func IsHttpError(err error) bool {
 // http调用失败
 func ErrorHttpError(format string, args ...interface{}) *errors.Error {
 	return errors.New(500, ErrorReason_HttpError.String(), fmt.Sprintf(format, args...))
-}
-
-// 验证码校验失败
-func IsCaptchaError(err error) bool {
-	if err == nil {
-		return false
-	}
-	e := errors.FromError(err)
-	return e.Reason == ErrorReason_CaptchaError.String() && e.Code == 500
-}
-
-// 验证码校验失败
-func ErrorCaptchaError(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_CaptchaError.String(), fmt.Sprintf(format, args...))
-}
-
-// 账号密码校验失败
-func IsAccountPwdError(err error) bool {
-	if err == nil {
-		return false
-	}
-	e := errors.FromError(err)
-	return e.Reason == ErrorReason_AccountPwdError.String() && e.Code == 500
-}
-
-// 账号密码校验失败
-func ErrorAccountPwdError(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_AccountPwdError.String(), fmt.Sprintf(format, args...))
 }

@@ -17,6 +17,7 @@ enum ErrorReason {
     USER_NOT_FOUND = 0 [(errors.code) = 404];
 
     CONTENT_MISSING = 1 [(errors.code) = 400];
+
     // 内部错误
     InternalError = 1 ;
     // 数据库错误
@@ -31,18 +32,7 @@ enum ErrorReason {
     RecordNotFound = 12 [ (errors.code) = 12 ];
     // 记录已经存在
     RecordIsExists = 13 [ (errors.code) = 13 ];
-    // RedisExist 错误
-    RedisExistError = 14 [ (errors.code) = 14 ];
-    // RedisGet 错误
-    RedisGetError = 15 [ (errors.code) = 15 ];
-    // 无访问权限
-    NoAccess = 30 [ (errors.code) = 30 ];
     // http调用失败
-    HttpError = 51 [ (errors.code) = 51 ];
-    // 验证码校验失败
-    CaptchaError = 52 [ (errors.code) = 52 ];
-    // 账号密码校验失败
-    AccountPwdError = 53 [ (errors.code) = 53 ];
-
+    HttpError = 14 [ (errors.code) = 14 ];
 }
 
