@@ -3,11 +3,13 @@ package kitZap
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/bighuangbee/gokit/constance"
 	"github.com/bighuangbee/gokit/log"
 	klog "github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -21,50 +23,73 @@ type Options struct {
 	// Skip caller skip, default 0
 	Skip              int
 	DisableStacktrace bool
+	//日志存储
+	Storage *Storage
+}
+
+type Storage struct {
+	Filename   string //指定日志存储位置
+	MaxSize    int    //日志的最大大小（M）
+	MaxBackups int    //日志的最大保存数量
+	MaxAge     int    //日志文件存储最大天数
+	Compress   bool   //是否压缩
+}
+
+func NewStorage() *Storage {
+	return &Storage{Filename: "/opt/logs.log", MaxSize: 10, MaxBackups: 5, MaxAge: 30, Compress: false}
 }
 
 type ZapLogger struct {
 	*zap.SugaredLogger
+	Sync func() error
 }
 
 func New(opt *Options) *ZapLogger {
 	if opt == nil {
 		panic("Options is required")
 	}
-	cfg := zap.Config{
-		Encoding:         "json",
-		Level:            zap.NewAtomicLevelAt(opt.Level),
-		OutputPaths:      []string{"stdout"},
-		ErrorOutputPaths: []string{"stderr"},
-		EncoderConfig: zapcore.EncoderConfig{
-			TimeKey:        "time",
-			LevelKey:       "level",
-			NameKey:        "logger",
-			CallerKey:      "caller",
-			MessageKey:     "zmsg",
-			StacktraceKey:  "stack",
-			LineEnding:     zapcore.DefaultLineEnding,
-			EncodeLevel:    zapcore.LowercaseLevelEncoder,
-			EncodeTime:     zapcore.ISO8601TimeEncoder,
-			EncodeDuration: zapcore.SecondsDurationEncoder,
-			EncodeCaller:   zapcore.ShortCallerEncoder,
-		},
-		DisableStacktrace: opt.DisableStacktrace,
-		DisableCaller:     false,
+
+	encoder := zapcore.EncoderConfig{
+		TimeKey:        "time",
+		LevelKey:       "level",
+		NameKey:        "logger",
+		CallerKey:      "caller",
+		MessageKey:     "zmsg",
+		StacktraceKey:  "stack",
+		LineEnding:     zapcore.DefaultLineEnding,
+		EncodeLevel:    zapcore.LowercaseLevelEncoder,
+		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeDuration: zapcore.SecondsDurationEncoder,
+		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}
+
 	zapopts := []zap.Option{}
 	if opt.Skip != 0 {
 		zapopts = append(zapopts, zap.AddCallerSkip(opt.Skip))
 	}
-	l, err := cfg.Build(zapopts...)
-	if err != nil {
-		panic(err)
+	if opt.Storage == nil {
+		opt.Storage = NewStorage()
 	}
+
+	level := zap.NewAtomicLevelAt(opt.Level)
+	var core zapcore.Core
+	core = zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoder), // 编码器配置
+		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(getLogWriter(opt.Storage))), // 打印到控制台和文件
+		level,
+	)
+
+	zapLogger := zap.New(core,
+		zap.AddCaller(),
+		zap.AddCallerSkip(opt.Skip),
+		zap.Development())
+
 	if opt.ServiceName != "" {
-		l = l.With(zap.String("service", opt.ServiceName))
+		zapLogger = zapLogger.With(zap.String("service", opt.ServiceName))
 	}
 	return &ZapLogger{
-		SugaredLogger: l.Sugar(),
+		SugaredLogger: zapLogger.Sugar(),
+		Sync:          zapLogger.Sync,
 	}
 }
 
@@ -81,14 +106,6 @@ func (l *ZapLogger) WithCtx(ctx context.Context) log.Logger {
 	return r
 }
 
-// AddCallerSkip 继承配置并增加callerskip，返回一个新的ZapLogger
-func (l *ZapLogger) AddCallerSkip(skip int) *ZapLogger {
-	return &ZapLogger{
-		SugaredLogger: l.SugaredLogger.Desugar().WithOptions(zap.AddCallerSkip(skip)).Sugar(),
-	}
-}
-
-// Log for hiKratos
 // see https://go-kratos.dev/docs/component/log
 func (l *ZapLogger) Log(level klog.Level, keyvals ...interface{}) error {
 	if len(keyvals) == 0 || len(keyvals)%2 != 0 {
@@ -113,4 +130,16 @@ func (l *ZapLogger) Log(level klog.Level, keyvals ...interface{}) error {
 		zl.Error("", data...)
 	}
 	return nil
+}
+
+// 日志自动切割
+func getLogWriter(s *Storage) zapcore.WriteSyncer {
+	lumberJackLogger := &lumberjack.Logger{
+		Filename:   s.Filename,
+		MaxSize:    s.MaxSize,
+		MaxBackups: s.MaxBackups,
+		MaxAge:     s.MaxAge,
+		Compress:   s.Compress,
+	}
+	return zapcore.AddSync(lumberJackLogger)
 }
