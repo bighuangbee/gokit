@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package api.basic.v1;
+
+import "google/protobuf/descriptor.proto";
+import "proto/errors.proto";
+
+option go_package = "api/basic/v1;v1";
+
+enum ErrorReason {
+    option allow_alias = true;
+
+    // 设置缺省错误码
+    option (errors.default_code) = 500;
+
+    // 为某个枚举单独设置错误码
+    USER_NOT_FOUND = 0 [(errors.code) = 404];
+
+    CONTENT_MISSING = 1 [(errors.code) = 400];
+
+    // 内部错误
+    InternalError = 1 ;
+    // 数据库错误
+    DbError = 2 [ (errors.code) = 2 ];
+    // 无效的参数
+    InvalidParameter = 7 [ (errors.code) = 7 ];
+    // 请求超时
+    Timeout = 9 [ (errors.code) = 9 ];
+    // token无效
+    Unauthenticated = 11 [ (errors.code) = 11];
+    // 记录未找到
+    RecordNotFound = 12 [ (errors.code) = 12 ];
+    // 记录已经存在
+    RecordIsExists = 13 [ (errors.code) = 13 ];
+    // http调用失败
+    HttpError = 14 [ (errors.code) = 14 ];
+}
+
