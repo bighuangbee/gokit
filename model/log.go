@@ -57,8 +57,14 @@ const (
 	HttpDelete
 )
 
-type LogUrlTitle struct {
+type LogUrlInfo struct {
 	Title      string
 	LogType    LogType
 	HttpMethod HttpMethod
+}
+
+type LogUrlInfoWithKey struct {
+	LogUrlInfo
+	//eg: POST-/api/user/xxx
+	Key string
 }
