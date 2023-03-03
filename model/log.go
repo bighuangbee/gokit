@@ -46,3 +46,19 @@ const (
 	// 保存
 	LogSave
 )
+
+
+type HttpMethod uint8
+
+const (
+	HttpPost HttpMethod = iota
+	HttpGet
+	HttpPut
+	HttpDelete
+)
+
+type LogUrlTitle struct {
+	Title      string
+	LogType    LogType
+	HttpMethod HttpMethod
+}
