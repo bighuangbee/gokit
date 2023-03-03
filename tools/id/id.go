@@ -1,4 +1,4 @@
-package id_generater
+package id
 
 type Generater interface {
 	Generate() ID

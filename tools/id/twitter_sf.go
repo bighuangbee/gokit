@@ -1,4 +1,4 @@
-package id_generater
+package id
 
 import (
 	"github.com/bwmarrin/snowflake"
