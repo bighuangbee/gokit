@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package api.basic.v1;
+package api.common.v1;
 
 import "google/protobuf/descriptor.proto";
 import "proto/errors.proto";
 
-option go_package = "api/basic/v1;v1";
+option go_package = "api/common/v1;v1";
 
 enum ErrorReason {
     option allow_alias = true;
