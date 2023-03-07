@@ -1,4 +1,4 @@
-package model
+package kitGorm
 
 import (
 	"database/sql/driver"
