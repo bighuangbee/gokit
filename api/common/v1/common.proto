@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package api.common.v1;
+import "google/protobuf/descriptor.proto";
+import "validate/validate.proto";
+
+option go_package = "api/common/v1;v1";
+
+// 性别
+enum Gender {
+  Unknown = 0;
+  Male = 1;
+  Female = 2;
+}
+
+// PageArg 分页参数
+message PageArg {
+  // default 0
+  int32 offset = 1 [(validate.rules).int32 = {ignore_empty: true, gte: 0}];
+  // default 10
+  int32 limit = 2 [(validate.rules).int32 = {ignore_empty: true, gt: 0}];
+
+  string orderBy = 3;
+  string orderType = 4 [(validate.rules).string = {ignore_empty: true, in: ['asc', 'desc']}];
+
+  int32 PageNo = 5 [(validate.rules).int32 = {ignore_empty: true, gt: 0}];
+  int32 PageSize = 6 [(validate.rules).int32 = {ignore_empty: true, gt: 0}];
+}
+
+// 字段声明
+message FieldMask {
+  repeated string paths = 1 [(validate.rules).repeated = {min_items:1, unique: true}];
+}

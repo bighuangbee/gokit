@@ -2,9 +2,7 @@ package model
 
 import (
 	"database/sql"
-	"time"
-
-	"gorm.io/gorm"
+	"github.com/bighuangbee/gokit/storage/kitGorm"
 )
 
 type Id struct {
@@ -12,7 +10,7 @@ type Id struct {
 }
 
 type CreatedInfo struct {
-	CreatedAt time.Time `json:"createdAt,omitempty" dbupdate:"created_at" gorm:"type:timestamp;not null;comment:创建时间"`
+	CreatedAt kitGorm.MyTime `json:"createdAt,omitempty" dbupdate:"created_at" gorm:"type:timestamp;not null;comment:创建时间"`
 	CreatedBy uint64    `json:"createdById,omitempty" dbupdate:"created_by" gorm:"type:bigint(11) unsigned;not null;default:0;comment:创建者"`
 }
 type CreatedByNameInfo struct {
@@ -28,7 +26,7 @@ type UpdatedByNameInfo struct {
 }
 
 type DeletedInfo struct {
-	DeletedAt gorm.DeletedAt `json:"deletedAt,omitempty" dbupdate:"deleted_at" gorm:"type:timestamp;comment:删除时间"` //gorm 自动启动软删除
+	DeletedAt sql.NullTime `json:"deletedAt,omitempty" dbupdate:"deleted_at" gorm:"type:timestamp;comment:删除时间"` //gorm 自动启动软删除
 	DeletedBy uint64         `json:"deletedBy,omitempty" dbupdate:"deleted_by" gorm:"comment:删除者"`
 }
 type DeletedByNameInfo struct {
