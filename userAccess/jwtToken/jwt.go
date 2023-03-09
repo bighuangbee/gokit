@@ -1,6 +1,8 @@
 package jwtToken
 
 import (
+	"errors"
+	"github.com/dgrijalva/jwt-go"
 	"time"
 )
 
