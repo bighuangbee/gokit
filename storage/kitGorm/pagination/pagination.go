@@ -88,6 +88,13 @@ func New(page IPageArg, opts ...option) (IPagination, error) {
 			"create_at": 1,
 		},
 	}
+
+	if page.GetOffset() == 0 && page.GetLimit() == 0{
+		if page.GetPageSize() > 0 {
+			p.Limit = int(page.GetPageSize())
+			p.Offset = int((page.GetPageNo() - 1) * page.GetPageSize())
+		}
+	}
 	return NewPage(p, opts...)
 }
 
