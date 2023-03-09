@@ -26,7 +26,7 @@ func GetGrpcClient(address string) *grpc.ClientConn {
 		grpcOnce.Do(func() {
 			poolConn, err := pool.New(address, pool.DefaultOptions)
 			if err != nil {
-				log.Fatalf("failed to new pool: %v", err)
+				log.Fatalf("grpc failed to new pool: %v", err)
 			}
 			poolConnMap.Store(address, poolConn)
 		})
@@ -41,7 +41,7 @@ func GetGrpcClient(address string) *grpc.ClientConn {
 	poolConn := poolConnInMap.(pool.Pool)
 	conn, err := poolConn.Get()
 	if err != nil {
-		log.Fatalf("failed to get conn: %v", err)
+		log.Fatalf("grpc failed to get conn: %v", err)
 	}
 	return conn.Value()
 }
