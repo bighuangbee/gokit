@@ -13,19 +13,19 @@ import (
 
 const aeskey = "4Cd$1f!7#f13Aae1^eB30fDb3f72*3_N"
 
-type AccessTokenNormal struct{
+type TokenNormal struct{
 }
 
-func NewAccessTokenNormal() IAccessToken {
-	return &AccessTokenNormal{}
+func NewTokenNormal() IToken {
+	return &TokenNormal{}
 }
 
-func (this *AccessTokenNormal) Generate(claims *UserClaims) (string, error) {
-	str := fmt.Sprintf("%d_%s_%s_%s", claims.CorpId, claims.Account, claims.JwtClaims.Id, tools.MD5(aeskey+ "_basic-platform_" + time.Now().String()))
+func (this *TokenNormal) Generate(claims *UserClaims) (string, error) {
+	str := fmt.Sprintf("%d_%s_%s_%s_%d_%d", claims.CorpId, claims.Account, claims.JwtClaims.Id, tools.MD5(aeskey+ "_basic-platform_" + time.Now().String()), claims.JwtClaims.IssuedAt, claims.JwtClaims.ExpiresAt)
 	return crypto.AesEncryptStr(str, aeskey)
 }
 
-func (this *AccessTokenNormal)Decode(token string)(claims *UserClaims, err error){
+func (this *TokenNormal)Decode(token string)(claims *UserClaims, err error){
 	str, err := crypto.AesDecryptStr(token, aeskey)
 	if err != nil{
 		return nil, err

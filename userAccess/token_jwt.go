@@ -8,14 +8,14 @@ import (
 
 const JWT_Encrtpy = "7#23e!GJd&AAz=13Da%6"
 
-type AccessTokenJWT struct{
+type TokenJWT struct{
 }
 
-func NewAccessTokenJWT() IAccessToken {
-	return &AccessTokenJWT{}
+func NewTokenJWT() IToken {
+	return &TokenJWT{}
 }
 
-func (this *AccessTokenJWT) Generate(claims *UserClaims) (string, error) {
+func (this *TokenJWT) Generate(claims *UserClaims) (string, error) {
 	data := make(map[string]interface{})
 	coper.Copy(&data, claims)
 
@@ -23,7 +23,7 @@ func (this *AccessTokenJWT) Generate(claims *UserClaims) (string, error) {
 	return token.AccessToken, err
 }
 
-func (this *AccessTokenJWT)Decode(tokenStr string)(claims *UserClaims, err error){
+func (this *TokenJWT)Decode(tokenStr string)(claims *UserClaims, err error){
 	token, err := jwtToken.Parse(tokenStr, []byte(JWT_Encrtpy))
 	if err != nil{
 		return nil, err

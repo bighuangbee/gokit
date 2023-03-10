@@ -10,31 +10,31 @@ import (
 	"time"
 )
 
-type IAccessToken interface {
+type IToken interface {
 	//生成token
 	Generate(claims *UserClaims)(token string, err error)
 	//解析token
 	Decode(token string)(claims *UserClaims, err error)
 }
 
-func NewAccessToken() IAccessToken {
-	//return NewAccessTokenNormal()
-	return NewAccessTokenJWT()
+func NewToken() IToken {
+	//return NewTokenNormal()
+	return NewTokenJWT()
 }
 
 
 type UserClaims struct {
 	Account string   `json:"account"` //账号
 	UserName string   `json:"user_name"` //用户名称
-	CorpId      int32    `json:"corp_id"` //企业 ID
+	CorpId int32    `json:"corp_id"` //企业 ID
 	JwtClaims jwt.StandardClaims `json:"jwt"`
 }
 
-func NewUserClaims(userName string, account string, CorpId int32, userId string, expire time.Duration) *UserClaims {
+func NewUserClaims(userName string, account string, corpId int32, userId string, expire time.Duration) *UserClaims {
 	return &UserClaims{
 		UserName: userName,
 		Account: account,
-		CorpId: CorpId,
+		CorpId: corpId,
 		JwtClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(expire).Unix(),
 			Id:        userId,

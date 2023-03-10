@@ -8,7 +8,7 @@ package userAccess
 import (
 	"errors"
 	"fmt"
-	"github.com/bighuangbee/gokit/tools/cache"
+	"github.com/bighuangbee/gokit/storage/cache"
 	"time"
 )
 
@@ -23,14 +23,14 @@ type IUserAccess interface {
 }
 
 
-func New(store cache.Cache, loginExpire time.Duration) *UserAccess {
-	return &UserAccess{Store: store, AccessToken: NewAccessToken(), LoginExpire: loginExpire}
+func New(store cache.ICache, loginExpire time.Duration) *UserAccess {
+	return &UserAccess{Store: store, AccessToken: NewToken(), LoginExpire: loginExpire}
 }
 
 // implement IUserAccess interface
 type UserAccess struct {
-	Store       cache.Cache
-	AccessToken IAccessToken
+	Store       cache.ICache
+	AccessToken IToken
 	LoginExpire time.Duration //登陆有效期
 }
 

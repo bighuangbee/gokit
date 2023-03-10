@@ -7,8 +7,9 @@ package userAccess
 
 import (
 	"fmt"
-	"github.com/bighuangbee/gokit/tools/cache"
+	"github.com/bighuangbee/gokit/storage/cache"
 	"github.com/dgrijalva/jwt-go"
+	kratosLog "github.com/go-kratos/kratos/v2/log"
 	"strconv"
 	"testing"
 	"time"
@@ -20,8 +21,10 @@ var addr = []string{"localhost:26379"}
 var passwd = "hiDronedb2020."
 var  index, _ = strconv.Atoi("0")
 
+
 func TestUserAccess(t *testing.T) {
-	c := cache.New(cache.CACHE_REDIS, addr, passwd, index)
+	logger := kratosLog.DefaultLogger
+	c, _ := cache.New(cache.CACHE_REDIS, addr, passwd, index, logger)
 
 	//tokenStore 	:= NewTokenStore(nil, th)
 	UserAccess 	:= New(c, LoginExpire)
