@@ -3,8 +3,9 @@ package coper
 import (
 "bytes"
 "encoding/json"
+	"github.com/petersunbag/coven"
 
-"github.com/golang/protobuf/jsonpb"
+	"github.com/golang/protobuf/jsonpb"
 "github.com/golang/protobuf/proto"
 )
 
@@ -46,3 +47,15 @@ func CopyFromPBMessage(to interface{}, from proto.Message) error {
 	return json.Unmarshal([]byte(s), to)
 }
 
+
+func StructConvert(to, from interface{}) error {
+	var c, err = coven.NewConverter(to, from)
+	if err != nil {
+		return err
+	}
+	err = c.Convert(to, from)
+	if err != nil {
+		return err
+	}
+	return nil
+}
