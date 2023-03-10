@@ -62,46 +62,6 @@ func Struct2Map(data interface{}, tagName ...string)map[string]interface{}{
 }
 
 
-//google.protobuf 自动填充为类型的零值，StringValue填充为空字符串、Int32Value填充为0，nil值会移除
-func PbToMapSkip(message proto.Message)(data map[string]interface{}){
-	m := jsonpb.Marshaler{
-		EnumsAsInts:  false,// 是否将枚举值设定为整数，而不是字符串类型
-		EmitDefaults: true, // 是否将字段值为空的渲染到JSON结构中, nil被忽略，0或""保留
-		OrigName:     true, // //是否使用原生的proto协议中的字段
-	}
-	var _buffer  bytes.Buffer
-	err := m.Marshal(&_buffer, message)
-	if err != nil{
-		return
-	}
-
-	err = json.Unmarshal(_buffer.Bytes(), &data)
-	if err != nil {
-		return
-	}
-
-	dataFilter := make(map[string]interface{})
-	for key, val := range data{
-		m, ok := val.(map[string]interface{})
-		if ok{
-			if m != nil{
-				if len(m) == 0{
-					dataFilter[key] = ""
-				}else{
-					for _, v := range m {
-						dataFilter[key] = v
-					}
-				}
-			}
-		}else{
-			if val != nil{
-				dataFilter[key] = val
-			}
-		}
-	}
-	return dataFilter
-}
-
 func PbToMap(message proto.Message, filter ...string)(data map[string]interface{}){
 	m := jsonpb.Marshaler{
 		EnumsAsInts:  false,// 是否将枚举值设定为整数，而不是字符串类型
