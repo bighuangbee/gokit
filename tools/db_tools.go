@@ -11,13 +11,12 @@ import (
 )
 
 
-func PbToUpdateMap(message proto.Message, tableModel interface{}, userId int64, userName string)(data map[string]interface{}) {
+func PbToUpdateMap(message proto.Message, tableModel interface{}, userId int64)(data map[string]interface{}) {
 	data = PbToModelMap(message, tableModel)
 
 	nowMyTime := kitGorm.MyTime(time.Now())
 	data["updated_at"] = &nowMyTime
 	data["updated_by"] = userId
-	data["updated_by_name"] = userName
 
 	return data
 }
