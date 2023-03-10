@@ -63,7 +63,7 @@ func Struct2Map(data interface{}, tagName ...string)map[string]interface{}{
 
 
 //google.protobuf 自动填充为类型的零值，StringValue填充为空字符串、Int32Value填充为0，nil值会移除
-func PbToMapUpdate(message proto.Message)(data map[string]interface{}){
+func PbToMapSkip(message proto.Message)(data map[string]interface{}){
 	m := jsonpb.Marshaler{
 		EnumsAsInts:  false,// 是否将枚举值设定为整数，而不是字符串类型
 		EmitDefaults: true, // 是否将字段值为空的渲染到JSON结构中, nil被忽略，0或""保留
