@@ -23,7 +23,7 @@ type ICache interface {
 
 
 
-const EXPIRE_DEFAULT = time.Second * 300
+const EXPIRE_DEFAULT = time.Minute*5
 
 const(
 	CACHE_REDIS = iota

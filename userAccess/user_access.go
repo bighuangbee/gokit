@@ -1,13 +1,8 @@
-/**
- * @desc //TODO $
- * @param $
- * @return $
- **/
 package userAccess
 
 import (
+	"context"
 	"errors"
-	"fmt"
 	"github.com/bighuangbee/gokit/storage/cache"
 	"time"
 )
@@ -22,29 +17,36 @@ type IUserAccess interface {
 	Logout(username string)(error)
 }
 
-
 func New(store cache.ICache, loginExpire time.Duration) *UserAccess {
-	return &UserAccess{Store: store, AccessToken: NewToken(), LoginExpire: loginExpire}
+	return &UserAccess{
+		Store: store,
+		Token: NewToken(),
+		LoginExpire: loginExpire,
+		Ctx: context.Background(),
+	}
 }
 
 // implement IUserAccess interface
 type UserAccess struct {
+	//储存token
 	Store       cache.ICache
-	AccessToken IToken
-	LoginExpire time.Duration //登陆有效期
+	//生成token，解析token
+	Token       IToken
+	//登陆有效期
+	LoginExpire time.Duration
+	Ctx context.Context
 }
 
 //签发token
 func (userService *UserAccess)Issue(user *UserClaims)(string, error){
-	claims := user
-	claims.JwtClaims.ExpiresAt = time.Now().Add(time.Minute * userService.LoginExpire).Unix()
-
-	token, err := userService.AccessToken.Generate(claims)
+	user.JwtClaims.ExpiresAt = time.Now().Add(time.Minute * userService.LoginExpire).Unix()
+	token, err := userService.Token.Generate(user)
 	if err != nil{
 		return "", err
 	}
 
-	//err = userService.Store.SetEntity(userService.AccessToken.StoreKey(claims), claims, userService.LoginExpire)
+	user.Token = token
+	err = userService.Store.SetEntity(userService.Ctx, user.StoreKey(), user, userService.LoginExpire)
 	return token, err
 }
 
@@ -54,26 +56,23 @@ func (userService *UserAccess) Validate(token string) (*UserClaims, error){
 		return nil, errors.New("token not allow empty.")
 	}
 
-	user, err := userService.AccessToken.Decode(token)
+	user, err := userService.Token.Decode(token)
 	if err != nil{
 		return nil, err
 	}
 
 	var validUser UserClaims
-	//err = userService.Store.GetEntity(userService.AccessToken.StoreKey(user), &validUser)
-
-	fmt.Println("--validUser", validUser, user)
-	return nil, errors.New("token invalid")
+	if err := userService.Store.GetEntity(userService.Ctx, user.StoreKey(), &validUser); err != nil{
+		return nil, errors.New("token invalid")
+	}
+	return user, nil
 }
 
 //注销token
 func (userService *UserAccess)Logout(token string)error{
-	user, err := userService.AccessToken.Decode(token)
+	user, err := userService.Token.Decode(token)
 	if err != nil{
 		return err
 	}
-
-	fmt.Println("p---user", user)
-	//return userService.Store.Del(userService.AccessToken.StoreKey(user))
-	return nil
+	return userService.Store.Del(userService.Ctx, user.StoreKey())
 }

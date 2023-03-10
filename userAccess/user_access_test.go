@@ -15,54 +15,62 @@ import (
 	"time"
 )
 
-var LoginExpire = 1440 * 2 * time.Minute //单位：分钟
+var LoginExpire = time.Hour * 24 * 15
 
-var addr = []string{"localhost:26379"}
-var passwd = "hiDronedb2020."
-var  index, _ = strconv.Atoi("0")
+var addr = []string{"localhost:6379"}
+var passwd = "A123!@#"
+var index, _ = strconv.Atoi("0")
 
 
 func TestUserAccess(t *testing.T) {
 	logger := kratosLog.DefaultLogger
 	c, _ := cache.New(cache.CACHE_REDIS, addr, passwd, index, logger)
 
-	//tokenStore 	:= NewTokenStore(nil, th)
-	UserAccess 	:= New(c, LoginExpire)
+	UserAccess	:= New(c, LoginExpire)
 
-	user, _ 	:= validateUser("10088", "123456")
+	user, _ 	:= mockValidateUser("10088", "123456")
+
 	token, err := UserAccess.Issue(user)
 	if err != nil {
 		fmt.Println("UserAccess.Issue:",err)
 		return
 	}
-
-	fmt.Println("new token:",token)
+	fmt.Println("token:",token)
 
 	userValidate, err := UserAccess.Validate(token)
 	if err != nil{
-		fmt.Println("userCliamsDecode1 err:", err)
+		fmt.Println("UserAccess.Validate err:", err)
 	}else{
-		fmt.Println("userCliamsDecode1 succ, result :", userValidate)
+		fmt.Println("UserAccess.Validate succ, result :", userValidate)
 	}
 
-
-
-
+	//用错误的token进行验证
 	userValidate2, err2 := UserAccess.Validate("1m6q+6Si/f4yC9nDaySnpdCoFnm/rZDgnTZpV43e00Pr6/I88QozMOT3fi0ZRlUX")
 	if err2 != nil{
-		fmt.Println("userCliamsDecode2 err:", err2)
+		fmt.Println("UserAccess.Validate 错误token, err:", err2)
 	}else{
-		fmt.Println("userValidate2 succ, result :", userValidate2)
+		fmt.Println("UserAccess.Validate 错误token, succ, result :", userValidate2)
 	}
+
+	//err = UserAccess.Logout(token)
+	//fmt.Println("UserAccess.Logout", err)
+	//
+	//userValidate, err = UserAccess.Validate(token)
+	//if err != nil{
+	//	fmt.Println("UserAccess.Validate after logout err:", err)
+	//}else{
+	//	fmt.Println("UserAccess.Validate after logout succ, result :", userValidate)
+	//}
 
 }
 
 
-func validateUser(username string, password string) (*UserClaims, error){
+func mockValidateUser(username string, password string) (*UserClaims, error){
 
 	// 验证用户 ...
 
 	return &UserClaims{
+		From: "web",
 		Account:   username,
 		UserName:  "大黄蜂",
 		CorpId:    1,
