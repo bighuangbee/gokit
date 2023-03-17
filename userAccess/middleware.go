@@ -7,6 +7,7 @@ import (
 	kitKratos "github.com/bighuangbee/gokit/kratos"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
+	"strconv"
 )
 
 // CheckToken Check Token middleware
@@ -31,7 +32,6 @@ func CheckToken(access IUserAccess) middleware.Middleware {
 	}
 }
 
-// 返回 token, 是否是http,err
 func GetUserToken(ctx context.Context) (*UserClaims, error) {
 	jwtToken := ctx.Value(UserClaims{})
 	if jwtToken == nil {
@@ -43,4 +43,18 @@ func GetUserToken(ctx context.Context) (*UserClaims, error) {
 		return nil, errors.New("token data error.")
 	}
 	return val, nil
+}
+
+func GetUserId(ctx context.Context) (int64) {
+	user, err := GetUserToken(ctx)
+	if err != nil{
+		return 0
+	}
+
+	id, err := strconv.ParseInt(user.JwtClaims.Id, 10, 64)
+	if err != nil {
+		return 0
+	}
+
+	return id
 }
