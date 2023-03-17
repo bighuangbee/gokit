@@ -21,7 +21,7 @@ func PbToUpdateMap(message proto.Message, tableModel interface{}, userId int64)(
 	return data
 }
 
-//message: google.protobuf 自动填充为类型的零值，StringValue填充为空字符串、Int32Value填充为0，nil值会移除
+//message: google.protobuf nil值忽略字段，非nil则自动填充为类型的零值，StringValue填充为空字符串、Int32Value填充为0，nil值会移除
 //tableModel: db模型
 func PbToModelMap(message proto.Message, tableModel interface{})(data map[string]interface{}){
 	m := jsonpb.Marshaler{
