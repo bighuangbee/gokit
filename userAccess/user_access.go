@@ -65,7 +65,12 @@ func (userService *UserAccess) Validate(token string) (*UserClaims, error){
 	if err := userService.Store.GetEntity(userService.Ctx, user.StoreKey(), &validUser); err != nil{
 		return nil, errors.New("token invalid")
 	}
-	return user, nil
+
+	if validUser.Token == token{
+		return user, nil
+	}
+
+	return nil, errors.New("validate error.")
 }
 
 //注销token

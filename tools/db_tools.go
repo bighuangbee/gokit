@@ -7,16 +7,17 @@ import (
 	"github.com/fatih/structs"
 	"github.com/gogo/protobuf/jsonpb"
 	"github.com/gogo/protobuf/proto"
+	"gorm.io/gorm"
 	"time"
 )
 
 
-func PbToUpdateMap(message proto.Message, tableModel interface{}, userId int64)(data map[string]interface{}) {
+func PbToUpdateMap(message proto.Message, tableModel interface{}, updatedBy int64)(data map[string]interface{}) {
 	data = PbToModelMap(message, tableModel)
 
 	nowMyTime := kitGorm.MyTime(time.Now())
 	data["updated_at"] = &nowMyTime
-	data["updated_by"] = userId
+	data["updated_by"] = updatedBy
 
 	return data
 }
@@ -69,4 +70,28 @@ func PbToModelMap(message proto.Message, tableModel interface{})(data map[string
 		}
 	}
 	return dataFilter
+}
+
+
+func DeleteMap(deletedBy int64)(data map[string]interface{}) {
+	now := time.Now()
+	return map[string]interface{}{
+		"deleted_at": gorm.DeletedAt{
+			Time: now,
+			Valid: true,
+		},
+		"deleted_by": deletedBy,
+	}
+}
+
+func DeleteMapWithUnix(deletedBy int64)(data map[string]interface{}) {
+	now := time.Now()
+	return map[string]interface{}{
+		"deleted_at": gorm.DeletedAt{
+			Time: now,
+			Valid: true,
+		},
+		"deleted_unix": now,
+		"deleted_by": deletedBy,
+	}
 }
