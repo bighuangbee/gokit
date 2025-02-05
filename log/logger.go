@@ -1,6 +1,9 @@
 package log
 
-import "context"
+import (
+	"context"
+	klog "github.com/go-kratos/kratos/v2/log"
+)
 
 // Logger interface
 type Logger interface {
@@ -18,4 +21,6 @@ type Logger interface {
 	Infow(msg string, keysAndValues ...interface{})
 	Warnw(msg string, keysAndValues ...interface{})
 	Errorw(msg string, keysAndValues ...interface{})
+
+	Log(level klog.Level, keyvals ...interface{}) error
 }

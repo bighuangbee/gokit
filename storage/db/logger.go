@@ -1,14 +1,18 @@
-package kitGorm
+package db
 
 import (
 	"context"
 	"errors"
-	"time"
-
+	kitLog "github.com/bighuangbee/gokit/log"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
 	glog "gorm.io/gorm/logger"
+	"time"
 )
+
+func NewLogger(logger *kitLog.ZapLogger) *Logger {
+	return &Logger{L: log.NewHelper(logger)}
+}
 
 // Logger Logger for gorm2
 type Logger struct {

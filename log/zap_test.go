@@ -11,16 +11,16 @@ func TestZap(t *testing.T) {
 		Level:       zapcore.InfoLevel,
 		ServiceName: "",
 		Skip:        2,
-		Writer:      NewFileWriter(&FileOption{
+		Writer: NewFileWriter(&FileOption{
 			Filename: "%Y-%m-%d.log",
 			MaxSize:  20,
 			MaxAge:   0,
 		}),
 	})
 
-
 	logHelper := log.NewHelper(logger)
 
 	logHelper.Info("111", 123)
 	logHelper.Debugw("debug", 123)
+
 }

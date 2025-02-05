@@ -1,4 +1,4 @@
-package kitGorm
+package db
 
 import (
 	"database/sql/driver"
@@ -8,7 +8,7 @@ import (
 )
 
 // 废弃
-//MyTime 自定义时间
+// MyTime 自定义时间
 type MyDecimal decimal.Decimal
 
 func (t *MyDecimal) UnmarshalJSON(data []byte) error {

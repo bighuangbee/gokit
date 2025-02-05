@@ -1,7 +1,8 @@
-package kitGorm
+package db
+
 import (
 	"fmt"
-	kitLog"github.com/bighuangbee/gokit/log"
+	kitLog "github.com/bighuangbee/gokit/log"
 	"github.com/go-kratos/kratos/v2/log"
 	"testing"
 )
@@ -21,13 +22,13 @@ func TestMysql(t *testing.T) {
 		DBName:   "hiar_mozi_device",
 		Logger:   Logger{L: log.NewHelper(logger)},
 	})
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	type user struct {
-		Id int
+		Id       int
 		Username string
 		Nickname string
 	}

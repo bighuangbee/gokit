@@ -1,0 +1,5 @@
+logs
+.idea
+deploy
+build
+.env

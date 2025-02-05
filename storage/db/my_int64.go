@@ -1,4 +1,4 @@
-package kitGorm
+package db
 
 import (
 	"database/sql/driver"
@@ -8,7 +8,8 @@ import (
 	"strings"
 )
 
-//  MyInt64 自定义
+//	MyInt64 自定义
+//
 // 支持前端js string和后端c++、java的int64
 type MyInt64 int64
 

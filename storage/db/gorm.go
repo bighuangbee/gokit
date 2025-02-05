@@ -1,4 +1,4 @@
-package kitGorm
+package db
 
 import (
 	"errors"
@@ -10,32 +10,31 @@ import (
 )
 
 type Options struct {
-	Address string
+	Address  string
 	UserName string
 	Password string
-	DBName string
-	Driver string
-	Logger logger.Interface
-	Charset string
+	DBName   string
+	Driver   string
+	Logger   logger.Interface
+	Charset  string
 }
 
-const(
+const (
 	DbDriverMysql = "MySql"
 )
 
-
 func New(opt *Options) (*gorm.DB, error) {
-	if opt.Driver == ""{
+	if opt.Driver == "" {
 		opt.Driver = DbDriverMysql
 	}
-	if opt.Logger == nil{
+	if opt.Logger == nil {
 		opt.Logger = logger.Default
 	}
 
 	var dialector gorm.Dialector
 
-	if opt.Driver == DbDriverMysql{
-		if opt.Charset == ""{
+	if opt.Driver == DbDriverMysql {
+		if opt.Charset == "" {
 			opt.Charset = "utf8mb4"
 		}
 
@@ -43,7 +42,7 @@ func New(opt *Options) (*gorm.DB, error) {
 			opt.UserName, opt.Password, opt.Address, opt.DBName, opt.Charset)
 
 		mysqlConfig := mysql.Config{
-			DSN:                       dsn,   // DSN data source name
+			DSN: dsn, // DSN data source name
 			//DefaultStringSize:         191,   // string 类型字段的默认长度
 			DisableDatetimePrecision:  true,  // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
 			DontSupportRenameIndex:    true,  // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
@@ -51,7 +50,7 @@ func New(opt *Options) (*gorm.DB, error) {
 			SkipInitializeWithVersion: false, // 根据版本自动配置
 		}
 		dialector = mysql.New(mysqlConfig)
-	}else{
+	} else {
 		return nil, errors.New("DB Driver not found")
 	}
 
@@ -60,12 +59,12 @@ func New(opt *Options) (*gorm.DB, error) {
 	} else {
 		db.Logger = opt.Logger
 		db.NamingStrategy = schema.NamingStrategy{
-			TablePrefix: "",
+			TablePrefix:   "",
 			SingularTable: true,
 		}
 
 		instance, err := db.DB()
-		if err != nil{
+		if err != nil {
 			return nil, err
 		}
 		instance.SetMaxIdleConns(5)
@@ -73,4 +72,3 @@ func New(opt *Options) (*gorm.DB, error) {
 		return db, nil
 	}
 }
-

@@ -1,4 +1,4 @@
-package kitGorm
+package db
 
 import (
 	"bytes"

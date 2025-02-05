@@ -1,4 +1,4 @@
-package kitGorm
+package db
 
 import (
 	"database/sql/driver"
@@ -50,4 +50,3 @@ func (t *PBTime) Scan(src interface{}) error {
 	}
 	return nil
 }
-
