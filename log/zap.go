@@ -39,7 +39,7 @@ func NewZapLogger(opt *Options) *ZapLogger {
 		LevelKey:       "level",
 		NameKey:        "logger",
 		CallerKey:      "caller",
-		MessageKey:     "zmsg",
+		MessageKey:     "msg",
 		StacktraceKey:  "stack",
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
@@ -108,14 +108,16 @@ func (l *ZapLogger) Log(level klog.Level, keyvals ...interface{}) error {
 }
 
 func (l *ZapLogger) Logw(level zapcore.Level, msg string, keyvals ...interface{}) {
-	if len(keyvals) == 0 || len(keyvals) == 1 || len(keyvals)%2 != 0 {
-		l.SugaredLogger.Desugar().Warn(fmt.Sprint("Keyvalues must appear in pairs: ", keyvals))
-	} else {
+	if len(keyvals) == 0 {
+		l.SugaredLogger.Desugar().Log(level, msg)
+	} else if len(keyvals)%2 == 0 {
 		var data []zap.Field
 		for i := 0; i < len(keyvals); i += 2 {
 			data = append(data, zap.Any(fmt.Sprint(keyvals[i]), fmt.Sprint(keyvals[i+1])))
 		}
 		l.SugaredLogger.Desugar().Log(level, msg, data...)
+	} else {
+		l.SugaredLogger.Desugar().Log(level, msg, zap.Any(fmt.Sprint(keyvals[0]), ""))
 	}
 }
 
