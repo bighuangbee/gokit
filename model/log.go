@@ -1,13 +1,13 @@
 package model
 
-import "github.com/bighuangbee/gokit/storage/kitGorm"
+import "github.com/bighuangbee/gokit/storage/db"
 
 type SysLog struct {
 	SysLogRpc
 	// 不需要赋值
 	CreateSecond int64 `json:"-" gorm:"create_second;type:bigint not null;comment:创建时间戳"`
 	// 不需要赋值
-	CreateAt storage_db.MyTime `json:"createAt"  gorm:"create_at"`
+	CreateAt db.MyTime `json:"createAt"  gorm:"create_at"`
 }
 type SysLogRpc struct {
 	Id        int64   `json:"id"` // 自增id

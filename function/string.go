@@ -1,4 +1,4 @@
-package tools
+package function
 
 import (
 	"math/rand"
@@ -16,10 +16,8 @@ func RandStr(n int) string {
 	return string(b)
 }
 
-
-
 /*
- 对切片的元素去重
+对切片的元素去重
 */
 func SliceUnique(slice []string) []string {
 	result := make([]string, 0, len(slice))
@@ -63,18 +61,16 @@ func SubStr(str string, start, length int) string {
 	return string(rs[start:end])
 }
 
-//
-//  StrEndRepair
-//  @Description: 对字符串的小数位填充0，对齐长度
-//  @param str
-//  @param prec 对齐的小数位，小数点后不到prec位的填充0
-//  @return string
-//
-func StrEndRepair(str string, prec int)string{
-	prec = prec+1
+// StrEndRepair
+// @Description: 对字符串的小数位填充0，对齐长度
+// @param str
+// @param prec 对齐的小数位，小数点后不到prec位的填充0
+// @return string
+func StrEndRepair(str string, prec int) string {
+	prec = prec + 1
 	str = SubStr(str, 0, strings.Index(str, ".")+prec) //截取小数点后8位
-	l := len(str[strings.Index(str, "."):])                //小数点后不够8位补0
-	if  l < prec{
+	l := len(str[strings.Index(str, "."):])            //小数点后不够8位补0
+	if l < prec {
 		for i := 0; i < prec-l; i++ {
 			str += "0"
 		}
@@ -82,15 +78,16 @@ func StrEndRepair(str string, prec int)string{
 	return str
 }
 
-/**
+/*
+*
 "23082383-62ac-4bde-8228-4ea734f74255, d1ca5687-d046-4bf9-b76e-672f2df8133b" =>
 "'23082383-62ac-4bde-8228-4ea734f74255','d1ca5687-d046-4bf9-b76e-672f2df8133b'"
 */
-func FormatWhereIn(str string) ( whereIn string){
+func FormatWhereIn(str string) (whereIn string) {
 	strSlice := strings.Split(str, ",")
-	for key,val := range strSlice {
+	for key, val := range strSlice {
 		whereIn += "'" + val + "'"
-		if key < (len(strSlice)-1){
+		if key < (len(strSlice) - 1) {
 			whereIn += ","
 		}
 	}

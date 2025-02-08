@@ -1,7 +1,7 @@
-package tools
+package function
 
 import (
-"fmt"
+	"fmt"
 )
 
 // 前景 背景 颜色

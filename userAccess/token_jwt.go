@@ -1,14 +1,14 @@
 package userAccess
 
 import (
-	"github.com/bighuangbee/gokit/tools/coper"
+	"github.com/bighuangbee/gokit/function/coper"
 	"github.com/bighuangbee/gokit/userAccess/jwt"
 	"time"
 )
 
 const JWT_Encrtpy = "7#23e!GJd&AAz=13Da%6"
 
-type TokenJWT struct{
+type TokenJWT struct {
 }
 
 func NewTokenJWT() IToken {
@@ -23,9 +23,9 @@ func (this *TokenJWT) Generate(claims *UserClaims) (string, error) {
 	return token.AccessToken, err
 }
 
-func (this *TokenJWT)Decode(tokenStr string)(claims *UserClaims, err error){
+func (this *TokenJWT) Decode(tokenStr string) (claims *UserClaims, err error) {
 	token, err := jwt.Parse(tokenStr, []byte(JWT_Encrtpy))
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 

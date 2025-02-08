@@ -1,4 +1,4 @@
-package tools
+package function
 
 import (
 	"golang.org/x/text/encoding/simplifiedchinese"
@@ -6,27 +6,26 @@ import (
 	"unicode"
 )
 
-const(
+const (
 	GB18030 = "GB18030"
-	GB2312 = "GB2312"
+	GB2312  = "GB2312"
 )
 
-func ConvertString(src string, charset string) string{
+func ConvertString(src string, charset string) string {
 	var str string
 	switch charset {
-		case GB18030:
-			var decodeBytes, _ = simplifiedchinese.GB18030.NewDecoder().String(src)
-			str = string(decodeBytes)
-		case GB2312:
-			var decodeBytes, _ = simplifiedchinese.HZGB2312.NewDecoder().String(src)
-			str = string(decodeBytes)
-		default:
-			str = src
+	case GB18030:
+		var decodeBytes, _ = simplifiedchinese.GB18030.NewDecoder().String(src)
+		str = string(decodeBytes)
+	case GB2312:
+		var decodeBytes, _ = simplifiedchinese.HZGB2312.NewDecoder().String(src)
+		str = string(decodeBytes)
+	default:
+		str = src
 	}
 
 	return str
 }
-
 
 func IsGBK(data []byte) bool {
 	length := len(data)
@@ -39,11 +38,11 @@ func IsGBK(data []byte) bool {
 			continue
 		} else {
 			//大于127的使用双字节编码
-			if  data[i] >= 0x81 &&
+			if data[i] >= 0x81 &&
 				data[i] <= 0xfe &&
-				data[i + 1] >= 0x40 &&
-				data[i + 1] <= 0xfe &&
-				data[i + 1] != 0xf7 {
+				data[i+1] >= 0x40 &&
+				data[i+1] <= 0xfe &&
+				data[i+1] != 0xf7 {
 				i += 2
 				continue
 			} else {
@@ -53,7 +52,6 @@ func IsGBK(data []byte) bool {
 	}
 	return true
 }
-
 
 func IsChinese(str string) bool {
 	var count int
@@ -65,7 +63,6 @@ func IsChinese(str string) bool {
 	}
 	return count > 0
 }
-
 
 func IsChineseStr(str string) bool {
 	for _, r := range str {

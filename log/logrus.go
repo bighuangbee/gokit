@@ -2,7 +2,7 @@ package log
 
 import (
 	"fmt"
-	"github.com/bighuangbee/gokit/tools"
+	"github.com/bighuangbee/gokit/function"
 	rotatelogs "github.com/lestrrat/go-file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-var(
+var (
 	logPath string
 )
 
@@ -21,7 +21,7 @@ type Loger struct {
 	Logrus *logrus.Logger
 }
 
-func New(logPath string)(*Loger, error){
+func New(logPath string) (*Loger, error) {
 	logPath = logPath
 
 	if _, err := os.Stat(logPath); os.IsNotExist(err) {
@@ -53,12 +53,13 @@ func New(logPath string)(*Loger, error){
 	return &Loger{loger}, nil
 }
 
-/**
-	写入本地日志文件， 按日期、日志级别分割为不同的文件
+/*
+*
+写入本地日志文件， 按日期、日志级别分割为不同的文件
 */
 func newLocalFileLogHook(level logrus.Level, formatter logrus.Formatter) logrus.Hook {
 
-	fileName := filepath.Join(logPath +"%Y%m%d.log")
+	fileName := filepath.Join(logPath + "%Y%m%d.log")
 
 	//文件分割
 	writer, err := rotatelogs.New(
@@ -79,22 +80,21 @@ func newLocalFileLogHook(level logrus.Level, formatter logrus.Formatter) logrus.
 
 }
 
-func (s *Loger)Infof(format string, args ...interface{}){
+func (s *Loger) Infof(format string, args ...interface{}) {
 	setPrefix("Infof")
 	s.Info(format, args)
 }
 
-func (s *Loger)Info(args ...interface{}){
+func (s *Loger) Info(args ...interface{}) {
 	s.Logrus.Info(setPrefix("Info"), args)
 }
 
-func (s *Loger) Error(args ...interface{}){
-	s.Logrus.Error(setPrefix(tools.Red("Error")), args)
+func (s *Loger) Error(args ...interface{}) {
+	s.Logrus.Error(setPrefix(function.Red("Error")), args)
 }
 
-
 // setPrefix set the prefix of the log output
-func setPrefix(level string) string{
+func setPrefix(level string) string {
 
 	pc, file, line, ok := runtime.Caller(2)
 	if ok {
@@ -109,7 +109,7 @@ func setPrefix(level string) string{
 }
 
 /*
-	日志输出格式
+日志输出格式
 */
 type LogerFormatter struct{}
 

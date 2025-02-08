@@ -1,4 +1,4 @@
-package tools
+package function
 
 import (
 	"io"
@@ -22,15 +22,15 @@ func IsFile(f string) bool {
 	return !fi.IsDir()
 }
 
-//获取文件名，不包含后缀名
-func GetFilename(filePath string)string{
+// 获取文件名，不包含后缀名
+func GetFilename(filePath string) string {
 	filePath = path.Base(filePath)
 	ext := path.Ext(filePath)
-	return filePath[0:len(filePath) - len(ext)]
+	return filePath[0 : len(filePath)-len(ext)]
 }
 
-//目录是否存在
-func PathExists(path string) (bool) {
+// 目录是否存在
+func PathExists(path string) bool {
 	_, err := os.Stat(path)
 	if err == nil {
 		return true
@@ -41,47 +41,46 @@ func PathExists(path string) (bool) {
 	return false
 }
 
-//获取当前目录的名称
-func GetPathName()string{
+// 获取当前目录的名称
+func GetPathName() string {
 	s, _ := os.Getwd()
 	return path.Base(s)
 }
 
-func GetFilesByPath(basePath string) ([]string) {
+func GetFilesByPath(basePath string) []string {
 	fileArr := []string{}
-	fs,_:= ioutil.ReadDir(basePath)
-	for _,file := range fs{
-		if file.IsDir(){
+	fs, _ := ioutil.ReadDir(basePath)
+	for _, file := range fs {
+		if file.IsDir() {
 			fileArr = append(fileArr, GetFilesByPath(basePath+file.Name()+"/")...)
-		}else{
-			fileArr = append(fileArr, basePath + "/" + file.Name())
+		} else {
+			fileArr = append(fileArr, basePath+"/"+file.Name())
 		}
 	}
 	return fileArr
 }
 
-
-func SaveByFileHeader(header *multipart.FileHeader, filename string)error{
+func SaveByFileHeader(header *multipart.FileHeader, filename string) error {
 	file, err := header.Open()
-	if err != nil{
+	if err != nil {
 		return err
 	}
 
 	os.MkdirAll(filepath.Dir(filename), 0755)
-	f1,_ := os.OpenFile(filename, os.O_CREATE | os.O_WRONLY, 0755)
+	f1, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0755)
 	defer f1.Close()
 
-	for{
+	for {
 		buf := make([]byte, 1024)
 		n, err := file.Read(buf)
-		if err != nil && err != io.EOF{
+		if err != nil && err != io.EOF {
 			return err
 		}
 
-		if n == 0{
+		if n == 0 {
 			break
 		}
-		if _, err = f1.Write(buf); err != nil{
+		if _, err = f1.Write(buf); err != nil {
 			return err
 		}
 	}
