@@ -6,6 +6,7 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -32,21 +33,27 @@ func HttpPost(addr string, params map[string]interface{}) ([]byte, error) {
 }
 
 type FormFile struct {
-	FormField  string
-	Filename   string
-	FileReader io.Reader
+	FormField string
+	Filename  string
 }
 
 func HttpFormPost(addr string, params map[string]string, formfile *FormFile) ([]byte, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
+	// formFile
+	fileReader, err := os.Open(formfile.Filename)
+	if err != nil {
+		return nil, err
+	}
+	defer fileReader.Close()
+
 	part, err := writer.CreateFormFile(formfile.FormField, formfile.Filename)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = io.Copy(part, formfile.FileReader)
+	_, err = io.Copy(part, fileReader)
 	if err != nil {
 		return nil, err
 	}

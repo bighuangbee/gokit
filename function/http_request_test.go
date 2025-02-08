@@ -2,8 +2,6 @@ package function
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"testing"
 	"time"
 )
@@ -14,19 +12,12 @@ func TestFrom(t *testing.T) {
 
 	fmt.Println("注册人脸", "filename", filename)
 
-	fileReader, err := os.Open(filename)
-	if err != nil {
-		log.Fatalln("os.Open error", filename)
-	}
-	defer fileReader.Close()
-
 	t1 := time.Now()
 	respBody, err := HttpFormPost(addr+"/face/registe", map[string]string{
 		"video_filename": filename,
 	}, &FormFile{
-		FormField:  "file",
-		Filename:   filename,
-		FileReader: fileReader,
+		FormField: "file",
+		Filename:  filename,
 	})
 
 	fmt.Println("face register request", err, string(respBody))
