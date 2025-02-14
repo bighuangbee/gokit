@@ -35,10 +35,10 @@ func NewZapLogger(opt *Options) *ZapLogger {
 	}
 
 	encoder := zapcore.EncoderConfig{
-		TimeKey:        "time",
-		LevelKey:       "level",
-		NameKey:        "logger",
-		CallerKey:      "caller",
+		TimeKey:  "time",
+		LevelKey: "level",
+		NameKey:  "logger",
+		//CallerKey:      "caller",
 		MessageKey:     "msg",
 		StacktraceKey:  "stack",
 		LineEnding:     zapcore.DefaultLineEnding,
@@ -50,6 +50,7 @@ func NewZapLogger(opt *Options) *ZapLogger {
 
 	zapopts := []zap.Option{}
 	if opt.Skip != 0 {
+		encoder.CallerKey = "caller"
 		zapopts = append(zapopts, zap.AddCallerSkip(opt.Skip))
 	}
 
