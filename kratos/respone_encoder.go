@@ -59,7 +59,6 @@ func SuccessEncoder() http.ServerOption {
 		kjson.MarshalOptions.UseEnumNumbers = true
 		data, err := codec.Marshal(v)
 
-
 		if err != nil {
 			return err
 		}
@@ -67,10 +66,9 @@ func SuccessEncoder() http.ServerOption {
 
 		_, _ = w.Write([]byte(fmt.Sprintf(`{
 			"code": %d,
-			"detailMsg": "%s",
 			"message": "%s",
 			"data": %s
-			}`, 0, defaultReason, msg, data)))
+			}`, 0, msg, data)))
 		return nil
 	})
 }

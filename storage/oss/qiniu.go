@@ -46,14 +46,16 @@ func NewQiniu(accessKey string, secretKey string, bucket string) *Qiniu {
 	}
 }
 
-func (q *Qiniu) UploadFile(filename, storageDir string) error {
+func (q *Qiniu) UploadFile(filename, storageDir string) (storagePath string, err error) {
 	name := filepath.Join(storageDir, filepath.Base(filename))
 
-	return q.uploadManager.UploadFile(context.Background(), filename, &uploader.ObjectOptions{
+	err = q.uploadManager.UploadFile(context.Background(), filename, &uploader.ObjectOptions{
 		BucketName: q.bucket,
 		ObjectName: &name,
 		FileName:   name,
 	}, nil)
+
+	return name, err
 }
 
 func (q *Qiniu) Sign() (token string, err error) {
