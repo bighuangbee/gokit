@@ -76,7 +76,7 @@ func HttpFormPost(addr string, params map[string]string, formfile *FormFile) ([]
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 
 	client := &http.Client{
-		Timeout: RequestTimeout,
+		Timeout: time.Second * 15,
 	}
 	resp, err := client.Do(req)
 	if err != nil {
