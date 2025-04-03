@@ -26,6 +26,9 @@ func NewClient(opt *Option) (*Client, error) {
 	cliOps.SetUsername(opt.User)
 	cliOps.SetPassword(opt.Password)
 	cliOps.SetCleanSession(true)
+	cliOps.SetAutoReconnect(true)
+	cliOps.SetConnectRetry(true)
+	cliOps.SetKeepAlive(30 * time.Second)
 
 	mqttCli := mqtt.NewClient(cliOps)
 	token := mqttCli.Connect()
