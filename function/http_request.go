@@ -3,6 +3,7 @@ package function
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -12,17 +13,23 @@ import (
 
 var RequestTimeout = time.Second * 3
 
-func HttpPost(addr string, params map[string]interface{}) ([]byte, error) {
-	jsonData, _ := json.Marshal(&params)
-	req, err := http.NewRequest("POST", addr, bytes.NewBuffer(jsonData))
+func HttpRequest(method string, url string, header map[string]interface{}, body map[string]interface{}) ([]byte, error) {
+	jsonData, err := json.Marshal(body)
+	if err != nil {
+		return nil, fmt.Errorf("序列化 JSON 失败: %v", err)
+	}
+
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return nil, err
 	}
+
+	for key, value := range header {
+		req.Header.Add(key, fmt.Sprintf("%v", value))
+	}
 	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{
-		Timeout: RequestTimeout,
-	}
+	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
