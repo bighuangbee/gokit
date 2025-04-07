@@ -8,26 +8,12 @@ import (
 	netHttp "net/http"
 )
 
-type ResponeError struct {
-	Code      int32             `json:"code,omitempty"`
-	DetailMsg string            `json:"detailMsg,omitempty"`
-	Message   string            `json:"message,omitempty"`
-	Metadata  map[string]string `json:"metadata,omitempty"`
-	RetCode   int32             `json:"retCode"`
-}
-
 func ErrorEncoder() http.ServerOption {
 	return http.ErrorEncoder(func(w netHttp.ResponseWriter, r *netHttp.Request, err error) {
-		se := errors.FromError(err)
-
 		//获取编码器
 		codec, _ := http.CodecForRequest(r, "Accept")
-		body, err := codec.Marshal(&ResponeError{
-			DetailMsg: se.Reason,
-			Message:   se.Message,
-			Metadata:  se.Metadata,
-			RetCode:   se.Code,
-		})
+		se := errors.FromError(err)
+		body, err := codec.Marshal(se)
 		if err != nil {
 			w.WriteHeader(netHttp.StatusInternalServerError)
 			return

@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"github.com/bighuangbee/gokit/function"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
@@ -21,8 +20,6 @@ func Signature(logger log.Logger, appSecret string) middleware.Middleware {
 					params["nonce"] = header.Get("nonce")
 					params["appId"] = header.Get("appId")
 					params["sign"] = header.Get("sign")
-
-					fmt.Println("---header", params)
 
 					if err := function.VerifySign(appSecret, params); err != nil {
 						logger.Log(log.LevelError, "err", err.Error(), "params", params)
