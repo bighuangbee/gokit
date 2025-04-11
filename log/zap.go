@@ -34,16 +34,20 @@ func NewZapLogger(opt *Options) *ZapLogger {
 		panic("Options is required")
 	}
 
+	customTimeEncoder := func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+		beijingT := t.In(time.FixedZone("CST", 8*60*60))
+		enc.AppendString(beijingT.Format("2006-01-02 15:04:05"))
+	}
+
 	encoder := zapcore.EncoderConfig{
-		TimeKey:  "time",
-		LevelKey: "level",
-		NameKey:  "logger",
-		//CallerKey:      "caller",
+		TimeKey:        "time",
+		LevelKey:       "level",
+		NameKey:        "logger",
 		MessageKey:     "msg",
 		StacktraceKey:  "stack",
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeTime:     customTimeEncoder, // Use custom time encoder
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}
@@ -54,7 +58,7 @@ func NewZapLogger(opt *Options) *ZapLogger {
 		zapopts = append(zapopts, zap.AddCallerSkip(opt.Skip))
 	}
 
-	//日志存储器
+	// Log storage
 	ws := []zapcore.WriteSyncer{
 		zapcore.AddSync(os.Stdout),
 	}
@@ -63,7 +67,7 @@ func NewZapLogger(opt *Options) *ZapLogger {
 	}
 
 	core := zapcore.NewCore(
-		zapcore.NewJSONEncoder(encoder), // 编码器配置
+		zapcore.NewJSONEncoder(encoder), // Encoder configuration
 		zapcore.NewMultiWriteSyncer(ws...),
 		zap.NewAtomicLevelAt(opt.Level),
 	)
@@ -76,6 +80,7 @@ func NewZapLogger(opt *Options) *ZapLogger {
 	if opt.ServiceName != "" {
 		zapLogger = zapLogger.With(zap.String("service", opt.ServiceName))
 	}
+
 	return &ZapLogger{
 		SugaredLogger: zapLogger.Sugar(),
 		Sync:          zapLogger.Sync,
