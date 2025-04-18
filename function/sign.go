@@ -58,8 +58,8 @@ func isTimestampValid(timestamp interface{}, maxDiff int64) bool {
 }
 
 // 服务端签名验证函数
-func VerifySign(appSecret string, params map[string]interface{}) error {
-	if !isTimestampValid(params["timestamp"], 3) {
+func VerifySign(appSecret string, params map[string]interface{}, timeDiff int64) error {
+	if !isTimestampValid(params["timestamp"], timeDiff) {
 		return errors.New("时间戳校验失败")
 	}
 
