@@ -6,9 +6,11 @@ require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/disintegration/imaging v1.6.2
 	github.com/eclipse/paho.mqtt.golang v1.5.0
 	github.com/envoyproxy/protoc-gen-validate v1.0.2
 	github.com/fatih/structs v1.1.0
+	github.com/fogleman/gg v1.3.0
 	github.com/go-kratos/kratos/v2 v2.8.3
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gogo/protobuf v1.3.2
@@ -41,6 +43,7 @@ require (
 	github.com/go-playground/form/v4 v4.2.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/gofrs/flock v0.8.1 // indirect
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/uuid v1.4.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
@@ -55,6 +58,7 @@ require (
 	github.com/tebeka/strftime v0.1.5 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
+	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.22.0 // indirect
