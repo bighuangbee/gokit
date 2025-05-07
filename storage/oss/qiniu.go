@@ -7,7 +7,7 @@ import (
 	"github.com/qiniu/go-sdk/v7/storagev2/http_client"
 	"github.com/qiniu/go-sdk/v7/storagev2/uploader"
 	"github.com/qiniu/go-sdk/v7/storagev2/uptoken"
-	"path/filepath"
+	"io"
 	"time"
 )
 
@@ -53,16 +53,23 @@ func NewQiniu(accessKey string, secretKey string, bucket string, expire time.Dur
 	return qiniu
 }
 
-func (q *Qiniu) UploadFile(filename, storageDir string) (storagePath string, err error) {
-	name := filepath.Join(storageDir, filepath.Base(filename))
-
+func (q *Qiniu) UploadFile(filename, storageFilename string) (err error) {
 	err = q.uploadManager.UploadFile(context.Background(), filename, &uploader.ObjectOptions{
 		BucketName: q.bucket,
-		ObjectName: &name,
-		FileName:   name,
+		ObjectName: &storageFilename,
+		FileName:   storageFilename,
 	}, nil)
 
-	return name, err
+	return err
+}
+
+func (q *Qiniu) UploadReader(reader io.Reader, storageFilename string) error {
+	err := q.uploadManager.UploadReader(context.Background(), reader, &uploader.ObjectOptions{
+		BucketName: q.bucket,
+		ObjectName: &storageFilename,
+		FileName:   storageFilename,
+	}, nil)
+	return err
 }
 
 func (q *Qiniu) Sign() (token string, err error) {

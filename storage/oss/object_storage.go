@@ -1,9 +1,13 @@
 package oss
 
-import "time"
+import (
+	"io"
+	"time"
+)
 
 type FileUpload interface {
-	UploadFile(filename, storageDir string) (storagePath string, err error)
+	UploadFile(filename, storageFilename string) (err error)
+	UploadReader(reader io.Reader, storageFilename string) (err error)
 	Sign() (token string, err error)
 }
 
