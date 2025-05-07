@@ -6,7 +6,7 @@ import (
 )
 
 func RandStr(n int) string {
-	const letter = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+><?"
+	const letter = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	letter_len := len(letter)
 
 	b := make([]byte, n)
