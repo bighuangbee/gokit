@@ -8,6 +8,7 @@ import (
 type FileUpload interface {
 	UploadFile(filename, storageFilename string) (err error)
 	UploadReader(reader io.Reader, storageFilename string) (err error)
+	DeleteDir(prefix string) (err error)
 	Sign() (token string, err error)
 }
 
